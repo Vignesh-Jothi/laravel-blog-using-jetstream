@@ -1,8 +1,8 @@
 <header class="flex items-center justify-between py-3 px-6 border-b border-gray-100">
     <div id="header-left" class="flex items-center">
-        <div class="text-gray-800 font-semibold">
-            <span class="text-yellow-500 text-xl">&lt;BWJ&gt;</span> Code
-        </div>
+        <a href="{{route('home')}}">
+            <x-application-logo />
+        </a>
         <div class="top-menu ml-10">
             <ul class="flex space-x-4">
                 <li>
@@ -46,10 +46,10 @@
     <div id="header-right" class="flex items-center md:space-x-6">
         <div class="flex space-x-5">
             @guest
-               @include('layouts.elements.header-guest')
+                @include('layouts.elements.header-guest')
             @endguest
             @auth
-               @include('layouts.elements.hearder-auth')
+                @include('layouts.elements.hearder-auth')
             @endauth
 
         </div>
