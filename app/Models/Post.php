@@ -3,13 +3,26 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+    use SoftDeletes;
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'title',
+        'slug',
+        'content',
+        'published_at',
+        'featured'
+
+    ];
+
     protected $casts = [
         'published_at' => 'datetime',
     ];
@@ -17,6 +30,10 @@ class Post extends Model
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function category(){
+        return $this->belongsToMany(Category::class);
     }
     public function scopePublished($query)
     {
