@@ -28,6 +28,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo_path'
     ];
 
     /**
@@ -59,4 +60,16 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function likes(){
+        return $this->belongsToMany(Post::class,'post_like')->withTimestamps();
+    }
+
+    public function comments(){
+        return $this->hasMany(comments::class);
+    }
+    
+    public function hasLiked(Post $post){
+        return $this->likes()->where('post_id',$post->id)->exists();
+    }
 }
