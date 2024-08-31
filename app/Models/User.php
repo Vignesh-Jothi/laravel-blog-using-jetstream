@@ -3,6 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Tables\Columns\Layout\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -10,7 +14,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
     use HasFactory;
@@ -18,6 +22,20 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasFactory;
+
+    /**
+     * Used to create the roles
+     */
+
+     const ROLE_ADMIN = "ADMIN";
+     const ROLE_EDITOR = "EDIT";
+     const ROLE_USER = "USER";
+
+     const Role = [
+        self::ROLE_ADMIN => 'Admin',
+        self::ROLE_EDITOR => 'Edit',
+        self::ROLE_USER => 'User'
+     ];
 
     /**
      * The attributes that are mass assignable.
@@ -28,7 +46,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'profile_photo_path'
+        'profile_photo_path',
+        'role'
     ];
 
     /**
@@ -60,6 +79,19 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function canAccessPanel(\Filament\Panel $panel): bool
+    {
+        return $this->isAdmin() || $this->isEditor();
+    }
+
+    public function isAdmin(){
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isEditor(){
+        return $this->role === self::ROLE_EDITOR;
+    }
 
     public function likes(){
         return $this->belongsToMany(Post::class,'post_like')->withTimestamps();
