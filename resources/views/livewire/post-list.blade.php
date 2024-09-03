@@ -23,7 +23,7 @@
     </div>
     <div class="py-4">
         @foreach ($this->posts as $post)
-            <x-post.post-artical :post="$post" />
+            <x-post.post-artical :key="'post-'.$post->id" :post="$post" />
         @endforeach
 
     </div>
