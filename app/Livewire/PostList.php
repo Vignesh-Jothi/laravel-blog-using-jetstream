@@ -44,6 +44,9 @@ class PostList extends Component
 
 
     public function activeCategory(){
+        if($this->category === null || $this->category === ""){
+            return null;
+        }
         return Category::where('slug',$this->category)->first();
     }
 
@@ -52,6 +55,7 @@ class PostList extends Component
     {
         
         return Post::published()
+            ->with('author')
             ->orderBy('published_at', $this->sort)
             ->when($this->activeCategory() !== null,function($query){
 
